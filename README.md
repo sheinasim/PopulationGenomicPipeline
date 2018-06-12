@@ -4,7 +4,6 @@ Commands for performing a population genomic analysis from genome assembly to po
 Table of contents
 =================
 
-  * [Table of contents](#table-of-contents)
   * [Getting started](#getting-started)
   * [Genome assembly](#genome-assembly)
   * [Assembly QC](#assembly-qc)
@@ -13,3 +12,28 @@ Table of contents
   * [Data visualization](#data-visualization)
 
 Getting started
+===============
+
+There are many considerations when embarking upon a population genomic study. 
+
+* What are your research questions?
+* Is there a reference genome for your species of interest?
+* Is there an annotated gene set?
+* How many individuals do you want to sample?
+* What kind of quality of DNA/RNA can you obtain?
+* What is your research budget?
+
+Genome assembly
+===============
+
+Assembly QC
+===========
+
+Identifying SNPs
+================
+
+Population genomic analysis
+===========================
+
+Data visualization
+==================
