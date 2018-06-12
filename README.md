@@ -9,8 +9,14 @@ Table of contents
   * [Estimate genome size](#estimate-genome-size)
   * [Assemble with Supernova v2](#assemble-with-supernova)
 - [Assembly QC](#assembly-qc)
+  * [BUSCOs](#buscos)
+  * [Assembly statistics](#assembly-statistics)
 - [Identifying SNPs](#identifying-snps)
+  * [Align reads](#align-reads)
+  * [Call variants](#call-variants)
 - [Population genomic analysis](#population-genomic-analysis)
+  * [Structure](#structure)
+  * [DAPC](#dapc)
 - [Data visualization](#data-visualization)
 
 Getting started
@@ -27,6 +33,11 @@ There are many considerations when embarking upon a population genomic study.
 
 Genome assembly
 ===============
+
+If you have the ability to obtain high-molecular weight DNA from a single individual of your study species, a cost-effective method for genome sequencing and assembly is a 10x linked-read 
+
+## Estimate genome size
+
 
 Assembly QC
 ===========
