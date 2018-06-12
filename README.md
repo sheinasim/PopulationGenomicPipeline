@@ -4,12 +4,14 @@ Commands for performing a population genomic analysis from genome assembly to po
 Table of contents
 =================
 
-  * [Getting started](#getting-started)
-  * [Genome assembly](#genome-assembly)
-  * [Assembly QC](#assembly-qc)
-  * [Identifying SNPs](#identifying-snps)
-  * [Population genomic analysis](#population-genomic-analysis)
-  * [Data visualization](#data-visualization)
+- [Getting started](#getting-started)
+- [Genome assembly](#genome-assembly)
+  * [Estimate genome size](#estimate-genome-size)
+  * [Assemble with Supernova v2](#assemble-with-supernova)
+- [Assembly QC](#assembly-qc)
+- [Identifying SNPs](#identifying-snps)
+- [Population genomic analysis](#population-genomic-analysis)
+- [Data visualization](#data-visualization)
 
 Getting started
 ===============
