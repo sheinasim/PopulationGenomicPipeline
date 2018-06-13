@@ -7,7 +7,7 @@ Table of contents
 - [Getting started](#getting-started)
 - [Genome assembly](#genome-assembly)
   * [Estimate genome size](#estimate-genome-size)
-  * [Assemble with Supernova v2](#assemble-with-supernova)
+  * [Assemble with Supernova v2](#assemble-with-supernova-v2)
 - [Assembly QA](#assembly-qc)
   * [BUSCOs](#buscos)
   * [Assembly statistics](#assembly-statistics)
