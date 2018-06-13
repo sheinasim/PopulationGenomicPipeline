@@ -12,11 +12,9 @@ Table of contents
   * [BUSCOs](#buscos)
   * [Assembly statistics](#assembly-statistics)
 - [Identifying SNPs](#identifying-snps)
-  * [ddRAD](#ddRAD)
-  * [Whole-genome resequencing](#wgs)
 - [Population genomic analysis](#population-genomic-analysis)
   * [Structure](#structure)
-  * [DAPC](#dapc)
+  * [Discriminant analysis of principle components](#dapc)
 - [Data visualization](#data-visualization)
 
 Getting started
@@ -62,7 +60,7 @@ jellyfish count -C -m 21 -s 1000000000 -t 10 sample1/outs/barcoded.fastq -o read
 jellyfish histo -t 10 reads.jf > reads.histo
 ```
 
-Now upload your reads.histo to [GenomeScope](http://qb.cshl.edu/genomescope/).
+Now upload your reads.histo to [GenomeScope](http://qb.cshl.edu/genomescope/) and use the estimated genome size to calculate the value to use for the --maxreads flag when running Supernova v.2.
 
 ## Assemble with Supernova v.2
 
@@ -101,16 +99,96 @@ export PATH=/home/ssim/SOFTWARE/BBTools/bbmap:$PATH
 stats.sh in=sample1_assembly.fasta.gz >sample1_assembly.stats
 ```
 
+Your output will look like this:
+```
+A       C       G       T       N       IUPAC   Other   GC      GC_stdev
+0.3369  0.1630  0.1631  0.3370  0.0121  0.0000  0.0000  0.3261  0.0467
+
+Main genome scaffold total:             7139
+Main genome contig total:               9573
+Main genome scaffold sequence total:    370.868 MB
+Main genome contig sequence total:      366.385 MB      1.209% gap
+Main genome scaffold N/L50:             31/2.738 MB
+Main genome contig N/L50:               429/241.944 KB
+Main genome scaffold N/L90:             185/233.255 KB
+Main genome contig N/L90:               1797/35.403 KB
+Max scaffold length:                    14.221 MB
+Max contig length:                      1.52 MB
+Number of scaffolds > 50 KB:            278
+% main genome in scaffolds > 50 KB:     92.63%
+
+
+Minimum         Number          Number          Total           Total           Scaffold
+Scaffold        of              of              Scaffold        Contig          Contig
+Length          Scaffolds       Contigs         Length          Length          Coverage
+--------        --------------  --------------  --------------  --------------  --------
+    All                  7,139           9,573     370,867,642     366,384,822    98.79%
+   1 KB                  7,139           9,573     370,867,642     366,384,822    98.79%
+ 2.5 KB                  3,881           6,250     365,640,328     361,161,218    98.77%
+   5 KB                  1,649           3,966     357,692,199     353,223,839    98.75%
+  10 KB                    661           2,923     351,212,966     346,754,576    98.73%
+  25 KB                    383           2,591     347,195,368     342,785,898    98.73%
+  50 KB                    278           2,453     343,516,481     339,153,631    98.73%
+ 100 KB                    222           2,368     339,606,171     335,312,951    98.74%
+ 250 KB                    183           2,264     333,520,157     329,410,057    98.77%
+ 500 KB                    138           2,074     316,899,194     313,173,674    98.82%
+   1 MB                     88           1,757     279,840,275     276,928,625    98.96%
+ 2.5 MB                     33           1,122     192,756,130     191,197,750    99.19%
+   5 MB                     17             778     138,149,875     137,155,755    99.28%
+  10 MB                      5             313      57,411,828      57,060,088    99.39%
+```
+
 ### Assembly-stats
+
+One way you can visualize your genome assembly is by using a program called [assembly-stats](https://github.com/rjchallis/assembly-stats). To install, clone it using git:
+
+```
+git clone https://github.com/rjchallis/assembly-stats.git
+```
+
+Then use the provided perl script to generate a .json file which will contain a summary of your genome.
+
+```
+perl asm2stats.minmaxgc.pl sample1_assembly.fasta > sample1.minmaxgc.json
+```
+
+This .json file will then be used by the assembly-stats.html which you can locally host. Append the url to get the desired [output](http://localhost/assembly-stats/assembly-stats.html?path=json/&assembly=vtam_sn2_busco&view=circle&altAssembly=vtam_hic&altView=compare&altView=cumulative&altView=table).
+
+
+Repeat modeling and masking
+===========================
+
+The last step in preparing an assembly for a population genomic analysis is to mask the repeats in the genome. This is necessary so that when you align your population genomic reads to the reference, reads mapping to the repeats will not be included in the analysis. Repeat modeling and masking can be accomplished using [Repeat Modeler](http://www.repeatmasker.org/RepeatModeler/) and [Repeat Masker](http://www.repeatmasker.org/RMDownload.html). Download these and follow the instructions for installation.
+
+```
+export PATH=/home/ssim/SOFTWARE/RepeatModeler:$PATH
+export PATH=/home/ssim/SOFTWARE/RepeatMasker:$PATH
+
+# Run Repeat Modeler 
+BuildDatabase -name "sample1_RM" -dir /home/ssim/PopulationGenomicPipeline/ -engine ncbi 
+# This will generate a directory with a unique_name that contains a file called consensi.fa.classified
+
+# Run Repeat Masker
+RepeatMasker -pa 32 -lib unique_name/consensi.fa.classified -dir sample1_assembly_repeats_masked sample1_assembly.fasta.gz
+ProcessRepeats --species drosophila sample1_assembly_repeats_masked/sample1_assembly.fasta.cat.gz
+```
+
+This will result in a file called `sample1_assembly.fasta.masked` in the `sample1_assembly_repeats_masked` directory.
 
 Identifying SNPs
 ================
 
-What kind of population genomic data do you have? [ddRAD](#ddRAD) or [Whole-genome resequencing](#wgs)
+Now that you have a high-quality and repeat masked reference genome, you have something to align your population genomic sequences to. If you made ddRAD libraries, you can use a program called [Stacks](http://catchenlab.life.illinois.edu/stacks/) to generate many types of genotype files that can serve as input files to various analysis programs. After sequencing, your sequences will be in different files separated by index but they will require further demultiplexing by barcode. This can be achieved using the Stacks *process_radtags* and a file containing your barcode and sample information. For this exercise, your raw ddRAD sequences will be in a directory called `Raw_ddRAD`, your barcode file is `sample1_barcodes.txt`, and your demultiplexed sequences will be written to `processed_SE`.
 
-## ddRAD
+```
+# gcc is a dependency of Stacks and thus must also be loaded into the path
+export PATH=/home/ssim/SOFTWARE/gcc-8_1_0/usr/local/bin:$PATH
+export PATH=/home/ssim/SOFTWARE/stacks-2.0b:$PATH
 
-## Whole-genome resequencing
+# Run process_radtags to demultiplex your single-end sequences by barcode. This will result in one .fastq.gz file for each individual in the library
+process_radtags -f Raw_ddRAD/sample1_R1.fastq.gz -i gzfastq -o processed_SE/ -b sample1_barcodes.txt -e nlaIII -r -c -q
+```
+
 
 Population genomic analysis
 ===========================
