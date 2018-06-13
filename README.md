@@ -7,14 +7,14 @@ Table of contents
 - [Getting started](#getting-started)
 - [Genome assembly](#genome-assembly)
   * [Estimate genome size](#estimate-genome-size)
-  * [Assemble with Supernova v2](#assemble-with-supernova-v2)
+  * [Assemble with Supernova v.2](#assemble-with-supernova-v.2)
 - [Assembly QA](#assembly-qc)
   * [BUSCOs](#buscos)
   * [Assembly statistics](#assembly-statistics)
 - [Identifying SNPs](#identifying-snps)
 - [Population genomic analysis](#population-genomic-analysis)
   * [Structure](#structure)
-  * [Discriminant analysis of principle components](#dapc)
+  * [Principle components analysis](#pca)
 - [Data visualization](#data-visualization)
 
 Getting started
@@ -85,7 +85,36 @@ Once you have your reference assembly you can use various tools to assess the qu
 
 ## BUSCOs
 
-One metric by which to determine the completeness of your genome is by using a Benchmark of Universal Single-Copy Orthologs. These are a set of genes that are specific to certain taxa 
+A Benchmark of Universal Single-Copy Orthologs (BUSCOs) are a set of genes that are found in nearly all of a specific taxa, and can serve as metric by which to determine the completeness of your genome. These can be identified from a genome assembly, a transcriptome assembly, or an annotated gene set. To identify the proportion of BUSCOs in your genome first by cloning BUSCO v3 using git and run it using python3 against the BUSCO database for its order or class. 
+
+```
+git clone https://gitlab.com/ezlab/busco.git
+
+export PATH=/home/ssim/SOFTWARE/BUSCO_v3/scripts:$PATH
+
+python3 run_BUSCO.py -i sample1_assembly.fasta -o sample1_assembly_busco -L /home/ssim/SOFTWARE/BUSCO_v3/lineages/insecta_odb9 -m geno -c 32
+
+```
+An output summary will look something like this:
+```
+# BUSCO version is: 3.0.2
+# The lineage dataset is: insecta_odb9 (Creation date: 2016-02-13, number of species: 42, number of BUSCOs: 1658)
+# To reproduce this run: python /data0/opt/Busco/BUSCO_v3/scripts/run_BUSCO.py -i ../Genome/GCA_002938995.1_ASM293899v1_genomic.fna -o vtam_supernova2_assembly -l /data0/opt/Busco/BUSCO_v3/lineages/insecta_odb9/ -m genome -c 32 -sp fly
+#
+# Summarized benchmarking in BUSCO notation for file ../Genome/GCA_002938995.1_ASM293899v1_genomic.fna
+# BUSCO was run in mode: genome
+
+        C:98.3%[S:97.9%,D:0.4%],F:0.7%,M:1.0%,n:1658
+
+        1631    Complete BUSCOs (C)
+        1624    Complete and single-copy BUSCOs (S)
+        7       Complete and duplicated BUSCOs (D)
+        12      Fragmented BUSCOs (F)
+        15      Missing BUSCOs (M)
+        1658    Total BUSCO groups searched
+```
+
+This shows that out of 1658 single-copy orthologis most of which are found in all insecta, our genome contains 98% which indicates reasonable completeness.
 
 ## Assembly statistics
 
@@ -189,6 +218,31 @@ export PATH=/home/ssim/SOFTWARE/stacks-2.0b:$PATH
 process_radtags -f Raw_ddRAD/sample1_R1.fastq.gz -i gzfastq -o processed_SE/ -b sample1_barcodes.txt -e nlaIII -r -c -q
 ```
 
+Once the reads have been demultiplexed, map them using BWA to an indexed reference genome. The alignment occurs for each individual separately in a loop where a list of all individuals are in a list in a file called `all_sample1_ind.txt`. All subsequent .sam files will be written to a directory called `BWA_mem_SE_sams`.
+
+```
+git clone https://github.com/lh3/bwa.git
+export PATH=/home/ssim/SOFTWARE/bwa:$PATH
+
+# Index reference assembly to prepare for mapping reads
+bwa index -p sample1_reference -a is sample1_assembly.fasta
+
+# Map reads to assembly.
+for x in `cat all_sample1_ind.txt`
+do
+bwa mem -t 32 sample1_reference processed_SE/$x.fq.gz >BWA_mem_SE_sams/$x.sam
+done
+```
+
+After aligning reads to a reference, these reads can be used to generate SNP catalogs using Stacks *ref_map.pl*, SNPs are identified using Stacks *populations*, and all files will be written to a directory called `genotypes`. Alternatively, a SNP catalog can also be identified without a reference genome using Stacks *denovo_map.pl*.
+
+```
+# Make stacks and generate SNP catalogs
+#ref_map.pl -S $all_sample1 -o ./genotypes/ -m 5 -T 32 -n 1 -O ./all_sample1_pop.txt
+
+# Call SNPs and output various genotype files such as vcf, plink, genepop, structure, and phylip
+populations -b $i -M ./all_vtam_pop.txt -P ./genotypes/ -m 10 -p 1 -r 0.5 -e nlaIII -t 32 -k -f p_value --ordered_export --write_single_snp --vcf --plink --genepop --genomic --structure --phylip
+```
 
 Population genomic analysis
 ===========================
@@ -197,7 +251,40 @@ What kind of population genomic analysis would you like to do? [Structure](#stru
 
 ## Structure
 
-## Discriminant analysis of principle components
+```
+qsub_folder=used_qsubs1
+output_folder=StructureResults1
+
+mkdir $qsub_folder
+mkdir $output_folder
+
+for k in {1..5};
+do
+for r in {1..100};
+do
+echo k_$k.rep_$r
+cat structure_qsub_header > $qsub_folder/k_$k.rep_$r.qsub
+echo "structure -K $k -o $output_folder/$k.$r.output" >> $qsub_folder/k_$k.rep_$r.qsub
+qsub $qsub_folder/k_$k.rep_$r.qsub &
+done
+done
+```
+
+## Principle components analysis
+
+```
+setwd("Z:/Vtam/DAPC/")
+library(adegenet)
+library(vcfR)
+vtam_new <- read.vcfR("vtam_only_keepers.recode.vcf")
+vtam_new_gl <- vcfR2genlight(vtam_new)
+vtam_only_keepers_population <- read.table("vtam_only_keepers_population.txt", sep="\t")
+vtam_only_keepers_population <- read.table("vtam_only_keepers_population.txt", sep="\t", header=T)
+vtam_new_gl$pop <- vtam_only_keepers_population$Population
+x.vtam <- tab(vtam_new_gl, freq=T, NA.method="mean")
+vtam_pca <- glPca(vtam_new_gl, parallel=F)
+scatter(vtam_pca, posi="bottomright")
+```
 
 Data visualization
 ==================
