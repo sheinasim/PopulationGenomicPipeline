@@ -291,9 +291,20 @@ vtam_only_keepers_population <- read.table("vtam_only_keepers_population.txt", s
 vtam_new_gl$pop <- vtam_only_keepers_population$Population
 x.vtam <- tab(vtam_new_gl, freq=T, NA.method="mean")
 vtam_pca <- glPca(vtam_new_gl, parallel=F)
-scatter(vtam_pca, posi="bottomright")
+scatter(vtam_pca)
 ```
+
+![PCA](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/vtam_pca2.png)
 
 Data visualization
 ==================
 
+The Structure results can be visualized spatially using GIS (ArcGIS or QGIS).
+![Structure](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/vtam_structure5.png)
+
+Or interactively through mvMapper for which the input can be generated in R with the adegenet package.
+```
+vtam_info <- read.table("vtam_only_keepers_population_lat_long.txt", header=T, sep="\t")
+out <- export_to_mvmapper(vtam_only_dapc, vtam_info, write_file=T, out_file="sample1_mvmapper.csv")
+```
+This results in a .csv which can be imported into [mvMapper](http://ctahr-peps.colo.hawaii.edu/?d=697c63715b674786bfe95e896950a37d) that can be used to explore multivariate data geographically.
