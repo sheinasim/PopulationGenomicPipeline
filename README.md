@@ -14,7 +14,7 @@ Table of contents
 - [Identifying SNPs](#identifying-snps)
 - [Population genomic analysis](#population-genomic-analysis)
   * [Structure](#structure)
-  * [Principle components analysis](#pca)
+  * [Principal components analysis](#pca)
 - [Data visualization](#data-visualization)
 
 Getting started
@@ -249,30 +249,37 @@ populations -b $i -M ./all_vtam_pop.txt -P ./genotypes/ -m 10 -p 1 -r 0.5 -e nla
 Population genomic analysis
 ===========================
 
-What kind of population genomic analysis would you like to do? [Structure](#structure) or [Discriminant analysis of principle components](#dapc)
+What kind of population genomic analysis would you like to do? [Structure](#structure) or [Principal components analysis](#pca)
 
 ## Structure
 
+The Structure suite includes [Structure](https://web.stanford.edu/group/pritchardlab/structure_software/release_versions/v2.3.4/html/structure.html), [Structure Harvester](https://github.com/dentearl/structureHarvester), and [CLUMPP](https://rosenberglab.stanford.edu/clumppDownload.html).
+
+As the name suggests, the program Structure uses a Bayesian framework to identify population structure amoung your individuals. To run the program, a `mainparams` file is necessary as it defines the parameters of your analysis. Once you have your `mainparams` file setup, you can run many replicates of Structure for many putative population priors (k's) using the following script. This results in 100 replicates of each of 5 putative population priors.
+
 ```
-qsub_folder=used_qsubs1
-output_folder=StructureResults1
-
-mkdir $qsub_folder
-mkdir $output_folder
-
 for k in {1..5};
 do
 for r in {1..100};
 do
 echo k_$k.rep_$r
-cat structure_qsub_header > $qsub_folder/k_$k.rep_$r.qsub
-echo "structure -K $k -o $output_folder/$k.$r.output" >> $qsub_folder/k_$k.rep_$r.qsub
-qsub $qsub_folder/k_$k.rep_$r.qsub &
+cat structure_qsub_header > sample1_qsubs/k_$k.rep_$r.qsub
+echo "structure -K $k -o sample1_structure_output/$k.$r.output" >> sample1_qsubs/k_$k.rep_$r.qsub
+qsub sample1_qsubs/k_$k.rep_$r.qsub &
 done
 done
 ```
 
-## Principle components analysis
+Once the many structure analyses have been performed, use Structure Harvester to identify the highest probable K with the Evanno method and set up a CLUMPP `paramfile` withe appropriate K to generate one output file with population assignment probabilities for each individual.
+
+```
+structureHarvester.py --dir=sample1_structure_output --out=structureHarvester_output --evanno --clumpp
+CLUMPP paramfile
+```
+
+
+
+## Principal components analysis
 
 ```
 setwd("Z:/Vtam/DAPC/")
@@ -280,7 +287,6 @@ library(adegenet)
 library(vcfR)
 vtam_new <- read.vcfR("vtam_only_keepers.recode.vcf")
 vtam_new_gl <- vcfR2genlight(vtam_new)
-vtam_only_keepers_population <- read.table("vtam_only_keepers_population.txt", sep="\t")
 vtam_only_keepers_population <- read.table("vtam_only_keepers_population.txt", sep="\t", header=T)
 vtam_new_gl$pop <- vtam_only_keepers_population$Population
 x.vtam <- tab(vtam_new_gl, freq=T, NA.method="mean")
