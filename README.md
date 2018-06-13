@@ -14,7 +14,7 @@ Table of contents
 - [Identifying SNPs](#identifying-snps)
 - [Population genomic analysis](#population-genomic-analysis)
   * [Structure](#structure)
-  * [Principal components analysis](#pca)
+  * [Principal components analysis](#principal-components-analysis)
 - [Data visualization](#data-visualization)
 
 Getting started
@@ -99,7 +99,7 @@ An output summary will look something like this:
 ```
 # BUSCO version is: 3.0.2
 # The lineage dataset is: insecta_odb9 (Creation date: 2016-02-13, number of species: 42, number of BUSCOs: 1658)
-# To reproduce this run: python /data0/opt/Busco/BUSCO_v3/scripts/run_BUSCO.py -i ../Genome/GCA_002938995.1_ASM293899v1_genomic.fna -o sample1_supernova2_assembly -l /data0/opt/Busco/BUSCO_v3/lineages/insecta_odb9/ -m genome -c 32 -sp fly
+# To reproduce this run: python /data0/opt/Busco/BUSCO_v3/scripts/run_BUSCO.py -i sample1_assembly.fasta -o sample1_assembly_busco -l /home/ssim/SOFTWARE/BUSCO_v3/lineages/insecta_odb9 -m genome -c 32 -sp fly
 #
 # Summarized benchmarking in BUSCO notation for file ../Genome/GCA_002938995.1_ASM293899v1_genomic.fna
 # BUSCO was run in mode: genome
@@ -209,7 +209,7 @@ This will result in a file called `sample1_assembly.fasta.masked` in the `sample
 Identifying SNPs
 ================
 
-Now that you have a high-quality and repeat masked reference genome, you have something to align your population genomic sequences to. If you made ddRAD libraries, you can use a program called [Stacks](http://catchenlab.life.illinois.edu/stacks/) to generate many types of genotype files that can serve as input files to various analysis programs. After sequencing, your sequences will be in different files separated by index but they will require further demultiplexing by barcode. This can be achieved using the Stacks *process_radtags* and a file containing your barcode and sample information. For this exercise, your raw ddRAD sequences will be in a directory called `Raw_ddRAD`, your barcode file is `sample1_barcodes.txt`, and your demultiplexed sequences will be written to `processed_SE`.
+Now that you have a high-quality and repeat masked reference genome, you have something to align your population genomic sequences to. If you made ddRAD libraries, you can use a program called [Stacks](http://catchenlab.life.illinois.edu/stacks/) to generate many types of genotype files that can serve as input files to various analysis programs. After sequencing, your sequences will be in different files separated by index but they will require further demultiplexing by barcode. This can be achieved using the Stacks [*process_radtags*](http://catchenlab.life.illinois.edu/stacks/comp/process_radtags.php) and a file containing your barcode and sample information. For this exercise, your raw ddRAD sequences will be in a directory called `Raw_ddRAD`, your barcode file is `sample1_barcodes.txt`, and your demultiplexed sequences will be written to `processed_SE`.
 
 ```
 # gcc is a dependency of Stacks and thus must also be loaded into the path
@@ -220,7 +220,7 @@ export PATH=/home/ssim/SOFTWARE/stacks-2.0b:$PATH
 process_radtags -f Raw_ddRAD/sample1_R1.fastq.gz -i gzfastq -o processed_SE/ -b sample1_barcodes.txt -e nlaIII -r -c -q
 ```
 
-Once the reads have been demultiplexed, map them using BWA to an indexed reference genome. The alignment occurs for each individual separately in a loop where a list of all individuals are in a list in a file called `all_sample1_ind.txt`. All subsequent .sam files will be written to a directory called `BWA_mem_SE_sams`.
+Once the reads have been demultiplexed, map them using [BWA](http://bio-bwa.sourceforge.net/bwa.shtml) to an indexed reference genome. Each individual is aligned to the reference separately in a loop where a list of all individuals are in a file called `all_sample1_ind.txt`. All subsequent .sam files will be written to a directory called `BWA_mem_SE_sams`.
 
 ```
 git clone https://github.com/lh3/bwa.git
@@ -236,7 +236,7 @@ bwa mem -t 32 sample1_reference processed_SE/$x.fq.gz >BWA_mem_SE_sams/$x.sam
 done
 ```
 
-After aligning reads to a reference, these reads can be used to generate SNP catalogs using Stacks *ref_map.pl*, SNPs are identified using Stacks *populations*, and all files will be written to a directory called `genotypes`. Alternatively, a SNP catalog can also be identified without a reference genome using Stacks *denovo_map.pl*.
+After aligning reads to a reference, these reads can be used to generate SNP catalogs using Stacks [*ref_map.pl*](http://catchenlab.life.illinois.edu/stacks/comp/ref_map.php), SNPs are identified using Stacks [*populations*](http://catchenlab.life.illinois.edu/stacks/comp/populations.php), and all files will be written to a directory called `genotypes`. Alternatively, a SNP catalog can also be identified without a reference genome using Stacks [*denovo_map.pl*](http://catchenlab.life.illinois.edu/stacks/comp/denovo_map.php).
 
 ```
 # Make stacks and generate SNP catalogs
@@ -249,7 +249,7 @@ populations -b $i -M ./all_sample1_pop.txt -P ./genotypes/ -m 10 -p 1 -r 0.5 -e 
 Population genomic analysis
 ===========================
 
-What kind of population genomic analysis would you like to do? [Structure](#structure) or [Principal components analysis](#pca)
+What kind of population genomic analysis would you like to do? [Structure](#structure) or [principal components analysis](#principal-components-analysis)
 
 ## Structure
 
