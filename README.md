@@ -31,7 +31,7 @@ Genome assembly
 
 If you have the ability to obtain high-molecular weight DNA from a single individual of your study species, a cost-effective method for genome sequencing and assembly is a 10x linked-read. This is a method that uses high-quality Illumina barcoded short reads where all reads with the same barcode were derived from the same single-molecule of high-molecular weight DNA to infer long-range information. For genomes equal to or smaller than that of the human genome (~3gb), it is recommended to sequence a chromium library on one lane of an Illumina HiSeq X. Once that is performed, you will have three fastq files, R1, R2, and I1. These files should all be in a directory.
 
-For this exercise, the files will be in a director called `/home/ssim/PopulationGenomicPipeline/Raw_fastq/`
+For this exercise, the files will be in a director called `/home/ssim/PopulationGenomicPipeline/Raw_10x/`
 
 ## Estimate genome size
 
@@ -46,7 +46,7 @@ Install [Long Ranger 2.2.2](https://support.10xgenomics.com/genome-exome/softwar
 export PATH=/home/ssim/SOFTWARE/longranger-2.2.2:$PATH
 
 ## Run longranger basic to process your files
-longranger basic --id=sample1 --fastqs=/home/ssim/PopulationGenomicPipeline/Raw_fastq/ 
+longranger basic --id=sample1 --fastqs=/home/ssim/PopulationGenomicPipeline/Raw_10x/ 
 ```
 
 Install [jellyfish 2.2.10](https://github.com/gmarcais/Jellyfish/releases).
@@ -72,7 +72,7 @@ Using your raw .fastq files use the following command with the --maxreads = (est
 export PATH=/home/ssim/SOFTWARE/supernova-2.0.0:$PATH
 
 ## Run Supernova 
-supernova run --id=sample1 --maxreads=138457386 --fastqs=/home/ssim/PopulationGenomicPipeline/Raw_fastq/
+supernova run --id=sample1 --maxreads=138457386 --fastqs=/home/ssim/PopulationGenomicPipeline/Raw_10x/
 
 ## Write a .fastq output of your assembly only including scaffolds larger than 5kb.
 supernova mkoutput --style=pseudohap --asmdir=/home/ssim/PopulationGenomicPipeline/sample1/outs/assembly --outputprefix=sample1 --minsize=5000
