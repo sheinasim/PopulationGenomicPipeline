@@ -8,7 +8,7 @@ Table of contents
 - [Genome assembly](#genome-assembly)
   * [Estimate genome size](#estimate-genome-size)
   * [Assemble with Supernova v.2](#assemble-with-supernova-v.2)
-- [Assembly QA](#assembly-qc)
+- [Assembly QA/QC](#assembly-qc)
   * [BUSCOs](#buscos)
   * [Assembly statistics](#assembly-statistics)
 - [Identifying SNPs](#identifying-snps)
@@ -29,7 +29,7 @@ Would you like to perform a whole-genome assembly? [Yes](#genome-assembly) or [N
 Genome assembly
 ===============
 
-If you have the ability to obtain high-molecular weight DNA from a single individual of your study species, a cost-effective method for genome sequencing and assembly is a 10x linked-read. This is a method that uses high-quality Illumina barcoded short reads where all reads with the same barcode were derived from the same single-molecule of high-molecular weight DNA to infer long-range information. For genomes equal to or smaller than that of the human genome (~3gb), it is recommended to sequence a chromium library on one lane of an Illumina HiSeq X. Once that is performed, you will have three fastq files, R1, R2, and I1. These files should all be in a directory.
+If you have the ability to obtain high-molecular weight DNA from a single individual of your study species, a cost-effective method for genome sequencing and assembly is a [10x linked-read](https://www.10xgenomics.com/). This is a method that uses high-quality Illumina barcoded short reads where all reads with the same barcode were derived from the same single-molecule of high-molecular weight DNA to infer long-range information. For genomes equal to or smaller than that of the human genome (~3gb), it is recommended to sequence a chromium library on one lane of an Illumina HiSeq X. Once that is performed, you will have three fastq files, R1, R2, and I1. These files should all be in a directory.
 
 For this exercise, the files will be in a director called `/home/ssim/PopulationGenomicPipeline/Raw_10x/`
 
@@ -78,7 +78,7 @@ supernova run --id=sample1 --maxreads=138457386 --fastqs=/home/ssim/PopulationGe
 supernova mkoutput --style=pseudohap --asmdir=/home/ssim/PopulationGenomicPipeline/sample1/outs/assembly --outputprefix=sample1 --minsize=5000
 ```
 
-Assembly QA
+Assembly QA/QC
 ===========
 
 Once you have your reference assembly you can use various tools to assess the quality of your genome based on completeness and continuity. 
@@ -183,7 +183,7 @@ Then use the provided perl script to generate a .json file which will contain a 
 perl asm2stats.minmaxgc.pl sample1_assembly.fasta > sample1.minmaxgc.json
 ```
 
-This .json file will then be used by the assembly-stats.html which you can locally host. Append the url to get the desired [output](http://localhost/assembly-stats/assembly-stats.html?path=json/&assembly=sample1_sn2_busco&view=circle&altAssembly=sample1_hic&altView=compare&altView=cumulative&altView=table).
+This .json file will then be used by the assembly-stats.html which you can locally host. Append the url to get the desired [output](http://localhost/assembly-stats/assembly-stats.html?path=json/&assembly=vtam_sn2_busco&view=circle&altAssembly=vtam_hic&altView=compare&altView=cumulative&altView=table).
 
 
 Repeat modeling and masking
