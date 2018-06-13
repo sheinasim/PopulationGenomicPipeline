@@ -277,9 +277,9 @@ structureHarvester.py --dir=sample1_structure_output --out=structureHarvester_ou
 CLUMPP paramfile
 ```
 
-
-
 ## Principal components analysis
+
+A principal components analysis is a way to distill the variation in your genomic data to the principal components which explain most of the variation that describes your dataset. This analysis can be performed using [R](https://www.r-project.org/) with the [adegenet](https://github.com/thibautjombart/adegenet/wiki) package.
 
 ```
 setwd("Z:/sample1/DAPC/")
@@ -289,7 +289,6 @@ sample1_new <- read.vcfR("sample1_only_keepers.recode.vcf")
 sample1_new_gl <- vcfR2genlight(sample1_new)
 sample1_only_keepers_population <- read.table("sample1_only_keepers_population.txt", sep="\t", header=T)
 sample1_new_gl$pop <- sample1_only_keepers_population$Population
-x.sample1 <- tab(sample1_new_gl, freq=T, NA.method="mean")
 sample1_pca <- glPca(sample1_new_gl, parallel=F)
 scatter(sample1_pca)
 ```
