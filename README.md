@@ -285,7 +285,7 @@ CLUMPP paramfile
 setwd("Z:/Vtam/DAPC/")
 library(adegenet)
 library(vcfR)
-vtam_new <- read.vcfR("vtam_only_keepers.recode.vcf")
+sample1_new <- read.vcfR("vtam_only_keepers.recode.vcf")
 vtam_new_gl <- vcfR2genlight(vtam_new)
 vtam_only_keepers_population <- read.table("vtam_only_keepers_population.txt", sep="\t", header=T)
 vtam_new_gl$pop <- vtam_only_keepers_population$Population
