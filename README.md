@@ -35,7 +35,7 @@ For this exercise, the files will be in a director called `/home/ssim/Population
 
 ## Estimate genome size
 
-Before assembling the genome, it is necessary to know the approximate size of the genome. If you know the approximate size of your genome, [skip](#assemble-with-supernova) this step. 
+Before assembling the genome, it is necessary to know the approximate size of the genome. If you know the approximate size of your genome, [skip](#assemble-with-supernova-v.2) this step. 
 
 This can be achieved using GenomeScope which estimates various aspects of your genome using a kmer count file produced by a program called jellyfish. However, to estimate kmer abundance, you must first process your fastq files using Long Ranger.
 
