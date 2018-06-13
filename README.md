@@ -120,7 +120,9 @@ This shows that out of 1658 single-copy orthologis most of which are found in al
 
 ### BBTools
 
-[Download](https://sourceforge.net/projects/bbmap/files/latest/download) and [install](https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/installation-guide/) according to the instructions.
+BBTools is a program that can be used to report general statistics about your genome. This includes GC content, total genome size, number of scaffolds, etc. To use BBTools, [download it from here](https://sourceforge.net/projects/bbmap/files/latest/download) and [install](https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/installation-guide/) according to the instructions.
+
+Usage is as follows:
 
 ```
 export PATH=/home/ssim/SOFTWARE/BBTools/bbmap:$PATH
