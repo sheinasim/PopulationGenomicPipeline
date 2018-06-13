@@ -99,7 +99,7 @@ An output summary will look something like this:
 ```
 # BUSCO version is: 3.0.2
 # The lineage dataset is: insecta_odb9 (Creation date: 2016-02-13, number of species: 42, number of BUSCOs: 1658)
-# To reproduce this run: python /data0/opt/Busco/BUSCO_v3/scripts/run_BUSCO.py -i ../Genome/GCA_002938995.1_ASM293899v1_genomic.fna -o vtam_supernova2_assembly -l /data0/opt/Busco/BUSCO_v3/lineages/insecta_odb9/ -m genome -c 32 -sp fly
+# To reproduce this run: python /data0/opt/Busco/BUSCO_v3/scripts/run_BUSCO.py -i ../Genome/GCA_002938995.1_ASM293899v1_genomic.fna -o sample1_supernova2_assembly -l /data0/opt/Busco/BUSCO_v3/lineages/insecta_odb9/ -m genome -c 32 -sp fly
 #
 # Summarized benchmarking in BUSCO notation for file ../Genome/GCA_002938995.1_ASM293899v1_genomic.fna
 # BUSCO was run in mode: genome
@@ -183,7 +183,7 @@ Then use the provided perl script to generate a .json file which will contain a 
 perl asm2stats.minmaxgc.pl sample1_assembly.fasta > sample1.minmaxgc.json
 ```
 
-This .json file will then be used by the assembly-stats.html which you can locally host. Append the url to get the desired [output](http://localhost/assembly-stats/assembly-stats.html?path=json/&assembly=vtam_sn2_busco&view=circle&altAssembly=vtam_hic&altView=compare&altView=cumulative&altView=table).
+This .json file will then be used by the assembly-stats.html which you can locally host. Append the url to get the desired [output](http://localhost/assembly-stats/assembly-stats.html?path=json/&assembly=sample1_sn2_busco&view=circle&altAssembly=sample1_hic&altView=compare&altView=cumulative&altView=table).
 
 
 Repeat modeling and masking
@@ -243,7 +243,7 @@ After aligning reads to a reference, these reads can be used to generate SNP cat
 #ref_map.pl -S $all_sample1 -o ./genotypes/ -m 5 -T 32 -n 1 -O ./all_sample1_pop.txt
 
 # Call SNPs and output various genotype files such as vcf, plink, genepop, structure, and phylip
-populations -b $i -M ./all_vtam_pop.txt -P ./genotypes/ -m 10 -p 1 -r 0.5 -e nlaIII -t 32 -k -f p_value --ordered_export --write_single_snp --vcf --plink --genepop --genomic --structure --phylip
+populations -b $i -M ./all_sample1_pop.txt -P ./genotypes/ -m 10 -p 1 -r 0.5 -e nlaIII -t 32 -k -f p_value --ordered_export --write_single_snp --vcf --plink --genepop --genomic --structure --phylip
 ```
 
 Population genomic analysis
@@ -282,29 +282,29 @@ CLUMPP paramfile
 ## Principal components analysis
 
 ```
-setwd("Z:/Vtam/DAPC/")
+setwd("Z:/sample1/DAPC/")
 library(adegenet)
 library(vcfR)
-sample1_new <- read.vcfR("vtam_only_keepers.recode.vcf")
-vtam_new_gl <- vcfR2genlight(vtam_new)
-vtam_only_keepers_population <- read.table("vtam_only_keepers_population.txt", sep="\t", header=T)
-vtam_new_gl$pop <- vtam_only_keepers_population$Population
-x.vtam <- tab(vtam_new_gl, freq=T, NA.method="mean")
-vtam_pca <- glPca(vtam_new_gl, parallel=F)
-scatter(vtam_pca)
+sample1_new <- read.vcfR("sample1_only_keepers.recode.vcf")
+sample1_new_gl <- vcfR2genlight(sample1_new)
+sample1_only_keepers_population <- read.table("sample1_only_keepers_population.txt", sep="\t", header=T)
+sample1_new_gl$pop <- sample1_only_keepers_population$Population
+x.sample1 <- tab(sample1_new_gl, freq=T, NA.method="mean")
+sample1_pca <- glPca(sample1_new_gl, parallel=F)
+scatter(sample1_pca)
 ```
 
-![PCA](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/vtam_pca2.png)
+![PCA](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/sample1_pca2.png)
 
 Data visualization
 ==================
 
 The Structure results can be visualized spatially using GIS (ArcGIS or QGIS).
-![Structure](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/vtam_structure5.png)
+![Structure](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/sample1_structure5.png)
 
 Or interactively through mvMapper for which the input can be generated in R with the adegenet package.
 ```
-vtam_info <- read.table("vtam_only_keepers_population_lat_long.txt", header=T, sep="\t")
-out <- export_to_mvmapper(vtam_only_dapc, vtam_info, write_file=T, out_file="sample1_mvmapper.csv")
+sample1_info <- read.table("sample1_only_keepers_population_lat_long.txt", header=T, sep="\t")
+out <- export_to_mvmapper(sample1_only_dapc, sample1_info, write_file=T, out_file="sample1_mvmapper.csv")
 ```
 This results in a .csv which can be imported into [mvMapper](http://ctahr-peps.colo.hawaii.edu/?d=697c63715b674786bfe95e896950a37d) that can be used to explore multivariate data geographically.
