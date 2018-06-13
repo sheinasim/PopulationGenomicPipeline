@@ -64,7 +64,7 @@ jellyfish histo -t 10 reads.jf > reads.histo
 
 Now upload your reads.histo to [GenomeScope](http://qb.cshl.edu/genomescope/).
 
-# Assemble with Supernova v.2
+## Assemble with Supernova v.2
 
 Install Supernova v.2 by [downloading](https://support.10xgenomics.com/de-novo-assembly/software/downloads/latest) and following [these instructions](https://support.10xgenomics.com/de-novo-assembly/software/pipelines/latest/installation). 
 
@@ -85,13 +85,13 @@ Assembly QA
 
 Once you have your reference assembly you can use various tools to assess the quality of your genome based on completeness and continuity. 
 
-* BUSCOs
+## BUSCOs
 
 One metric by which to determine the completeness of your genome is by using a Benchmark of Universal Single-Copy Orthologs. These are a set of genes that are specific to certain taxa 
 
-* Assembly statistics
+## Assembly statistics
 
-** BBTools
+### BBTools
 
 [Download](https://sourceforge.net/projects/bbmap/files/latest/download) and [install](https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide/installation-guide/) according to the instructions.
 
@@ -101,25 +101,25 @@ export PATH=/home/ssim/SOFTWARE/BBTools/bbmap:$PATH
 stats.sh in=sample1_assembly.fasta.gz >sample1_assembly.stats
 ```
 
-
+### Assembly-stats
 
 Identifying SNPs
 ================
 
 What kind of population genomic data do you have? [ddRAD](#ddRAD) or [Whole-genome resequencing](#wgs)
 
-# ddRAD
+## ddRAD
 
-# Whole-genome resequencing
+## Whole-genome resequencing
 
 Population genomic analysis
 ===========================
 
 What kind of population genomic analysis would you like to do? [Structure](#structure) or [Discriminant analysis of principle components](#dapc)
 
-# Structure
+## Structure
 
-# Discriminant analysis of principle components
+## Discriminant analysis of principle components
 
 Data visualization
 ==================
