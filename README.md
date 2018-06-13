@@ -7,7 +7,7 @@ Table of contents
 - [Getting started](#getting-started)
 - [Genome assembly](#genome-assembly)
   * [Estimate genome size](#estimate-genome-size)
-  * [Assemble with Supernova v.2](#assemble-with-supernova-v.2)
+  * [Assemble with Supernova v2](#assemble-with-supernova-v2)
 - [Assembly QA/QC](#assembly-qc)
   * [BUSCOs](#buscos)
   * [Assembly statistics](#assembly-statistics)
@@ -35,7 +35,7 @@ For this exercise, the files will be in a director called `/home/ssim/Population
 
 ## Estimate genome size
 
-Before assembling the genome, it is necessary to know the approximate size of the genome. If you know the approximate size of your genome, [skip](#assemble-with-supernova-v.2) this step. 
+Before assembling the genome, it is necessary to know the approximate size of the genome. If you know the approximate size of your genome, [skip](#assemble-with-supernova-v2) this step. 
 
 This can be achieved using GenomeScope which estimates various aspects of your genome using a kmer count file produced by a program called jellyfish. However, to estimate kmer abundance, you must first process your fastq files using Long Ranger.
 
@@ -62,9 +62,9 @@ jellyfish histo -t 10 reads.jf > reads.histo
 
 Now upload your reads.histo to [GenomeScope](http://qb.cshl.edu/genomescope/) and use the estimated genome size to calculate the value to use for the --maxreads flag when running Supernova v.2.
 
-## Assemble with Supernova v.2
+## Assemble with Supernova v2
 
-Install Supernova v.2 by [downloading](https://support.10xgenomics.com/de-novo-assembly/software/downloads/latest) and following [these instructions](https://support.10xgenomics.com/de-novo-assembly/software/pipelines/latest/installation). 
+Install Supernova v2 by [downloading](https://support.10xgenomics.com/de-novo-assembly/software/downloads/latest) and following [these instructions](https://support.10xgenomics.com/de-novo-assembly/software/pipelines/latest/installation). 
 
 Using your raw .fastq files use the following command with the --maxreads = (estimated genome size * 56) / 150. In this case if the estimated genome size is 370.868 Mb use: --maxreads=138457386.
 
