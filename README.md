@@ -35,7 +35,7 @@ If you have the ability to obtain high-molecular weight DNA from a single indivi
 
 For this exercise, the files will be in a director called `/home/ssim/PopulationGenomicPipeline/Raw_fastq/`
 
-# Estimate genome size
+## Estimate genome size
 
 Before assembling the genome, it is necessary to know the approximate size of the genome. If you know the approximate size of your genome, [skip]() this step. 
 
