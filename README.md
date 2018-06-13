@@ -294,13 +294,13 @@ sample1_pca <- glPca(sample1_new_gl, parallel=F)
 scatter(sample1_pca)
 ```
 
-![PCA](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/sample1_pca2.png)
+![PCA](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/vtam_pca2.png)
 
 Data visualization
 ==================
 
 The Structure results can be visualized spatially using GIS (ArcGIS or QGIS).
-![Structure](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/sample1_structure5.png)
+![Structure](https://github.com/sheinasim/PopulationGenomicPipeline/blob/master/vtam_structure5.png)
 
 Or interactively through mvMapper for which the input can be generated in R with the adegenet package.
 ```
